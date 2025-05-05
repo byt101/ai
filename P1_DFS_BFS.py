@@ -31,8 +31,10 @@ def bfs(graph, start):
         if vertex not in visited:
             print(vertex, end=" ")
             visited.add(vertex)
-            queue.extend(graph[vertex] - visited)
-
+            for neighbor in sorted(graph[vertex]):
+                if neighbor not in visited:
+                    queue.append(neighbor)
+                    
 # Running DFS
 print("DFS Traversal starting from B:")
 dfs(graph, 'B', set())
