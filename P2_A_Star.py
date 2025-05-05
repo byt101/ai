@@ -103,3 +103,59 @@ def a_star():
 path = a_star()
 print("Path from start to goal:", path)
 
+
+# ---------------------------------------Use Only One-------------------------------------------------
+
+# Maze problem using heapq and A* 
+
+maze = [
+    [0, 0, 0, 0],
+    [1, 1, 1, 0],
+    [0, 0, 0, 0],
+    [1, 0, 1, 0]
+]
+
+start = (0, 0)
+goal = (3, 1)
+
+def h(cell):
+    x, y = cell
+    gx, gy = goal
+    return abs(x - gx) + abs(y - gy)
+
+def a_star():
+    from heapq import heappush, heappop
+
+    open_set = []
+    heappush(open_set, (h(start), 0, start))
+    
+    came = {}
+    cost = {start: 0}
+
+    while open_set:
+        _, g, current = heappop(open_set)
+
+        if current == goal:
+            path = [current]
+            while current in came:
+                current = came[current]
+                path.append(current)
+            return path[::-1]
+
+        x, y = current
+        for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            nx, ny = x + dx, y + dy
+            next = (nx, ny)
+
+            if 0 <= nx < 4 and 0 <= ny < 4 and maze[nx][ny] == 0:
+                new_g = g + 1
+                if next not in cost or new_g < cost[next]:
+                    cost[next] = new_g
+                    came[next] = current
+                    f = new_g + h(next)
+                    heappush(open_set, (f, new_g, next))
+
+    return None
+
+path = a_star()
+print("Path:", path)
